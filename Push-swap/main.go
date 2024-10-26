@@ -17,7 +17,9 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	for _, instruction := range f.PushSwap(stackA) {
+	stackB, instructions := []int{}, []string{}
+	instructions, _, _ = f.PushSwap(stackA, stackB, instructions)
+	for _, instruction := range instructions {
 		fmt.Println(instruction)
 	}
 }
