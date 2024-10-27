@@ -11,12 +11,8 @@ func ParseArgs(args []string) ([]int, error) {
 	for _, arg := range args {
 		if arg != "" {
 			value, err := strconv.Atoi(arg)
-			if err != nil {
-				fmt.Println(err)
-				return nil, err
-			}
-			if numbers[value] {
-				return nil, fmt.Errorf("duplicate number: %d", value)
+			if err != nil || numbers[value] {
+				return nil, fmt.Errorf("Error")
 			}
 			numbers[value] = true
 			stackA = append(stackA, value)

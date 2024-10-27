@@ -1,11 +1,10 @@
 package functions
 
-import "sort"
+import (
+	"sort"
+)
 
 func PushSwap(stackA, stackB []int, instructions []string) ([]string, []int, []int) {
-	if sort.IntsAreSorted(stackA) {
-		return instructions, stackA, stackB
-	}
 	if len(stackA) > 3 {
 		min := stackA[0]
 		count := 0
@@ -15,7 +14,7 @@ func PushSwap(stackA, stackB []int, instructions []string) ([]string, []int, []i
 				min = stackA[i]
 			}
 		}
-		stackB = append(stackB, stackA[count])
+		stackB = append([]int{stackA[count]}, stackB...)
 		stackA = append(stackA[:count], stackA[count+1:]...)
 		pos := count
 		for count > 0 {
@@ -29,6 +28,9 @@ func PushSwap(stackA, stackB []int, instructions []string) ([]string, []int, []i
 		instructions = append(instructions, "pb")
 		if len(stackA) > 3 {
 			instructions, stackA, stackB = PushSwap(stackA, stackB, instructions)
+		}
+		if sort.IntsAreSorted(stackA) {
+			return instructions, stackA, stackB
 		}
 	}
 	if len(stackA) <= 3 {
@@ -49,8 +51,8 @@ func PushSwap(stackA, stackB []int, instructions []string) ([]string, []int, []i
 			stackA[0], stackA[2] = stackA[2], stackA[0]
 			instructions = append(instructions, "sa", "rra")
 		}
-		for i := len(stackB) - 1; i >= 0; i-- {
-			stackA = append(stackA, stackB[i])
+		for i := 0; i < len(stackB); i++ {
+			stackA = append([]int{stackB[i]}, stackA...)
 			instructions = append(instructions, "pa")
 		}
 	}
