@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	f "functions/Functions"
 	"os"
 	"strings"
+
+	f "functions/Functions"
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 	stackA, err := f.ParseArgs(args)
 	if err != nil {
 		fmt.Println(err)
+		return
+	} else if len(stackA) < 2 {
+		fmt.Println("Error")
 		return
 	}
 	stackB, instructions := []int{}, []string{}
