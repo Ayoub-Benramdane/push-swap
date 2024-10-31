@@ -4,7 +4,7 @@ import (
 	"sort"
 )
 
-func PushSwap(stackA, stackB []int, instructions []string, tot int) ([]string, []int, []int) {
+func PushSwap(stackA, stackB []int, instructions []string) ([]string, []int, []int) {
 	if len(stackA) > 3 {
 		min := stackA[0]
 		count := 0
@@ -15,7 +15,7 @@ func PushSwap(stackA, stackB []int, instructions []string, tot int) ([]string, [
 			}
 		}
 		pos := count
-		if count == 1 && stackA[0] < stackA[2] {
+		if count == 1 && stackA[0] < stackA[2] && stackA[0] > stackA[len(stackA)-1] {
 			instructions = append(instructions, "sa")
 			stackA[0], stackA[1] = stackA[1], stackA[0]
 		} else {
@@ -31,14 +31,11 @@ func PushSwap(stackA, stackB []int, instructions []string, tot int) ([]string, [
 				}
 			}
 		}
-		if sort.IntsAreSorted(stackA) && len(stackA) == tot {
-			return instructions, stackA, stackB
-		}
 		stackB = append([]int{stackA[0]}, stackB...)
 		stackA = append([]int{}, stackA[1:]...)
 		instructions = append(instructions, "pb")
-		if len(stackA) > 3 {
-			instructions, stackA, stackB = PushSwap(stackA, stackB, instructions, tot)
+		if !sort.IntsAreSorted(stackA) && len(stackA) > 3 {
+				instructions, stackA, stackB = PushSwap(stackA, stackB, instructions)
 		}
 	}
 	if len(stackA) < 3 && stackA[1] < stackA[0] {
