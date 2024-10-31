@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if len(os.Args) != 2 {
+	if len(os.Args) < 2 {
 		return
 	}
 	args := strings.Split(os.Args[1], " ")
@@ -22,7 +22,8 @@ func main() {
 		return
 	}
 	stackB, instructions := []int{}, []string{}
-	instructions, _, _ = f.PushSwap(stackA, stackB, instructions)
+	tot := len(stackA)
+	instructions, _, _ = f.PushSwap(stackA, stackB, instructions, tot)
 	for _, instruction := range instructions {
 		fmt.Println(instruction)
 	}
