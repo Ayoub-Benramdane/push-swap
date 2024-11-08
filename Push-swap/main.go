@@ -22,7 +22,8 @@ func main() {
 		return
 	}
 	stackB, instructions := []int{}, []string{}
-	instructions, _, _ = f.PushSwap(stackA, stackB, instructions)
+	f.PushSwap(&stackA, &stackB, &instructions)
+	fmt.Println(stackA, stackB)
 	for _, instruction := range instructions {
 		fmt.Println(instruction)
 	}
