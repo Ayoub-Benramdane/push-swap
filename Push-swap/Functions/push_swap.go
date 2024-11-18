@@ -5,34 +5,42 @@ import (
 )
 
 func PushSwap(stackA, stackB *[]int, instructions *[]string) {
+	if sort.IntsAreSorted((*stackA)) {
+		return
+	}
 	if len(*stackA) > 3 {
-		if sort.IntsAreSorted((*stackA)[1:]) {
-			if (*stackA)[0] > (*stackA)[len(*stackA)-1] {
-				*instructions = append(*instructions, "ra")
-				*stackA = append((*stackA)[1:len(*stackA)-1], (*stackA)[0], (*stackA)[len(*stackA)-1])
-			} else {
-				*instructions = append(*instructions, "rra", "pb", "ra", "pa", "ra")
-				*stackA = append((*stackA)[1:], (*stackA)[:1]...)
-			}
+		if sort.IntsAreSorted((*stackA)[1:]) && (*stackA)[0] > (*stackA)[1] && (*stackA)[0] < (*stackA)[len(*stackA)-1] {
+			*instructions = append(*instructions, "sa")
+			(*stackA)[0], (*stackA)[1] = (*stackA)[1], (*stackA)[0]
+			PushSwap(stackA, stackB, instructions)
+		} else if sort.IntsAreSorted((*stackA)[1:]) && (*stackA)[0] > (*stackA)[len(*stackA)-1] {
+			*instructions = append(*instructions, "ra")
+			*stackA = append((*stackA)[1:], (*stackA)[0])
+			PushSwap(stackA, stackB, instructions)
+		}  else if sort.IntsAreSorted((*stackA)[:len(*stackA)-1])  {
+			*instructions = append(*instructions, "rra")
+			*stackA = append((*stackA)[len(*stackA)-1:], (*stackA)[:len(*stackA)-1]...)
+			PushSwap(stackA, stackB, instructions)
 		} else if !sort.IntsAreSorted(*stackA) {
 			count, pos := minNumber(stackA)
 			moveToTop(stackA, instructions, count, pos)
-			*stackB = append([]int{(*stackA)[0]}, *stackB...)
-			(*stackA) = append([]int{}, (*stackA)[1:]...)
-			*instructions = append(*instructions, "pb")
-			if !sort.IntsAreSorted(*stackA) && len(*stackA) > 3 {
+			if !sort.IntsAreSorted(*stackA) {
+				*stackB = append([]int{(*stackA)[0]}, *stackB...)
+				(*stackA) = append([]int{}, (*stackA)[1:]...)
+				*instructions = append(*instructions, "pb")
 				PushSwap(stackA, stackB, instructions)
 			}
 		}
-	}
-	if len(*stackA) < 3 && (*stackA)[1] < (*stackA)[0] {
+	} else if len(*stackA) < 3 && (*stackA)[1] < (*stackA)[0] {
 		(*stackA)[0], (*stackA)[1] = (*stackA)[1], (*stackA)[0]
 		*instructions = append(*instructions, "sa")
 	} else if len(*stackA) == 3 {
 		smallStack(stackA, instructions)
 	}
-	for i := 0; i < len(*stackB); i++ {
+	for i := 0; len(*stackB)!=0; i++ {
 		(*stackA) = append([]int{(*stackB)[i]}, (*stackA)...)
+		(*stackB) = (*stackB)[i+1:]
+		i--
 		*instructions = append(*instructions, "pa")
 	}
 }
@@ -81,7 +89,7 @@ func moveToTop(stackA *[]int, instructions *[]string, count, pos int) {
 				count++
 			} else {
 				*instructions = append(*instructions, "ra")
-				(*stackA) = append((*stackA)[1:], (*stackA)[:1]...)
+				(*stackA) = append((*stackA)[1:], (*stackA)[0])
 				count--
 			}
 		}

@@ -13,18 +13,15 @@ func main() {
 		return
 	}
 	args := strings.Split(os.Args[1], " ")
-	stackA, err := f.ParseArgs(args)
-	if err != nil {
-		fmt.Println(err)
-		return
-	} else if len(stackA) < 2 {
-		fmt.Println("Error")
-		return
-	}
+	stackA:= f.ParseArgs(args)
 	stackB, instructions := []int{}, []string{}
-	f.PushSwap(&stackA, &stackB, &instructions)
-	fmt.Println(stackA, stackB)
-	for _, instruction := range instructions {
-		fmt.Println(instruction)
+	if len(stackA) > 50 {
+		f.PushSwap1(&stackA, &stackB, &instructions)
+	} else {
+		f.PushSwap(&stackA, &stackB, &instructions)
 	}
+	// for _, instruction := range instructions {
+	// 	fmt.Println(instruction)
+	// }
+	fmt.Println(stackA, stackB)
 }
