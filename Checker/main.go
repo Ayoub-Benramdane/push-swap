@@ -14,6 +14,7 @@ func main() {
 	}
 	args := strings.Split(os.Args[len(os.Args)-1], " ")
 	var expressions string
+	stack := f.ParseArgs(args)
 	for {
 		var input string
 		fmt.Scanln(&input)
@@ -23,11 +24,6 @@ func main() {
 		expressions += input +"\\n"
 	}
 	sliceExpressions := strings.Split(expressions, "\\n")
-	stack, err := f.ParseArgs(args)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 	stack = f.Swaper(stack, sliceExpressions)
 	if sort.IntsAreSorted(stack) {
 		fmt.Println("OK")
